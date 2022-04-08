@@ -7,17 +7,17 @@ import cv2
 
 trainx,trainy,testx,testy=load_database.load_mnist()
 
-def baricentro(img,x,y):
-    xg=0
-    peso=0
+def baricentro(img,dx,dy):
+    xg=0 
     yg=0
+    peso=0
     tmp=0
-    for i in range(x):
-        for j in range(y):
-            tmp=img[i][j]
+    for y in range(dy):
+        for x in range(dx):
+            tmp=img[x,y]
             peso+=tmp
-            xg+=tmp*i
-            yg+=tmp*j
+            xg+=tmp*x
+            yg+=tmp*y
     return xg/peso,yg/peso
 
 def normalizza(img,x,y,par):
