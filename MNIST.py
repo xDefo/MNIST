@@ -96,7 +96,7 @@ def scacchiera(img):
 
 trainx,trainy,testx,testy=load_database.load_mnist()
 
-f=open("test5rette.txt","w")
+f=open("test9rette.txt","w")
 
 idx1=0
 x=np.arange(-0.5,28.5,0.1)
@@ -109,7 +109,7 @@ for img in testx:
     xg,yg=baricentro(img,28,28)
     xg=round(xg)
     yg=round(yg)
-    m=genRette(xg,yg,5)
+    m=genRette(xg,yg,9)
 
     #ax.imshow(img)
 

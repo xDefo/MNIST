@@ -4,7 +4,7 @@ import tensorflow.keras as keras
 import matplotlib.pyplot as plt
 import numpy as np
 
-train=open("intersezioni5rette.txt","r")
+train=open("train9rette.txt","r")
 y_train=[]
 x_train=[]
 Ntr=60000
@@ -13,20 +13,21 @@ for i in range(Ntr):
     tmp=train.readline()
     y_train.append(int(tmp[0]))
     a=[]
-    for j in range(5):
+    for j in range(9):
         tmp=train.readline()
         a.append(int(tmp[0]))
     x_train.append(a)
 
 train.close()
-test=open("test5rette.txt","r")
+test=open("test9rette.txt","r")
 y_test=[]
 x_test=[]
 for i in range(Nts):
     tmp=test.readline()
     y_test.append(int(tmp[0]))
     a=[]
-    for j in range(5):
+    for j in range(9):
+        
         tmp=test.readline()
         a.append(int(tmp[0]))
     x_test.append(a)
@@ -45,7 +46,7 @@ y_test =keras.utils.to_categorical(y_test, num_categories)
 model=Sequential()
 
 #aggiungo layer + input
-model.add(Dense(units=100,activation='relu',input_shape=(5,)))
+model.add(Dense(units=100,activation='relu',input_shape=(9,)))
 
 #aggiungo uno strato nascosto
 model.add(Dense(units=100,activation='relu'))
