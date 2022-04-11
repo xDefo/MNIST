@@ -4,7 +4,9 @@ import tensorflow.keras as keras
 import matplotlib.pyplot as plt
 import numpy as np
 
-train=open("train9rette.txt","r")
+
+print("ciao")
+train=open("file_dataset/train9rette.txt","r")
 y_train=[]
 x_train=[]
 Ntr=60000
@@ -19,7 +21,7 @@ for i in range(Ntr):
     x_train.append(a)
 
 train.close()
-test=open("test9rette.txt","r")
+test=open("file_dataset/test9rette.txt","r")
 y_test=[]
 x_test=[]
 for i in range(Nts):
@@ -80,6 +82,6 @@ plt.legend(['train', 'test'], loc='upper left')
 plt.show()
 
 # Salvataggio del modello
-model.save('marco.mnist.model.h5')
+model.save('modelli/prova_con_9_rette.h5')
 plt.show()
 

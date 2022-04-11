@@ -19,7 +19,7 @@ def baricentro(img,dx,dy):
             peso+=tmp
             xg+=tmp*x
             yg+=tmp*y
-    return xg/peso,yg/peso
+    return round(xg/peso),round(yg/peso)
 
 def normalizza(img,dx,dy,par):
     for i in range(dx):
@@ -94,37 +94,32 @@ def scacchiera(img):
     #print(img)         
     return img
 
+def create_file(insieme_train,insieme_test,n,file_name):  #funziona ancora solo con immagini 28x28
+    f=open(file_name,"w")
+    idx1=0
+    x=np.arange(-0.5,28.5,0.1)
+    for img in insieme_train:
+        img=normalizza(img,28,28,1) #normalizzo immagine
+        img=skeletonize(img) #trovo lo skeletro
+        xg,yg=baricentro(img,28,28) #calcolo il baricentro
+        m=genRette(xg,yg,n) #genero coefficienti angolari rette
+        f.write("{n}\n".format(n=insieme_test[idx1]))
+        for m in m:
+            conta=findIntersection(img,m,28,28,xg,yg)
+            f.write("{n}\n".format(n=conta))
+        idx1+=1
+    fclose(f)
+
+
+
 trainx,trainy,testx,testy=load_database.load_mnist()
 
-f=open("test9rette.txt","w")
-
-idx1=0
-x=np.arange(-0.5,28.5,0.1)
-for img in testx:
-    #fig,ax=plt.subplots()
-
-    img=normalizza(img,28,28,1)
-    #img=cv2.medianBlur(img,5)
-    img=skeletonize(img)
-    xg,yg=baricentro(img,28,28)
-    xg=round(xg)
-    yg=round(yg)
-    m=genRette(xg,yg,9)
-
-    #ax.imshow(img)
+create_file(trainx,trainy,13,"file_dataset/13rettetrain.txt")
+print("fine training")
+create_file(testx,testy,13,"file_dataset/13rettetest.txt")
 
 
-    f.write("{n}\n".format(n=testy[idx1]))
-    for m in m:
-        conta=findIntersection(img,m,28,28,xg,yg)
-        f.write("{n}\n".format(n=conta))
-    idx1+=1
-    #print(idx1/6000*100)
-        #ax.plot(x,-m*(x-xg)+yg,label='m={:10.2f}'.format(m))
-        #ax.scatter(px,py)
-    #ax.scatter(xg,yg)
-    #plt.legend()
-    #plt.ylim(27.5,-0.5)
-   # plt.xlim(-0.5,27.5)
-    #plt.savefig("img{n}".format(n=i))
+   
+
+    
 
