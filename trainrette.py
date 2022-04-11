@@ -5,40 +5,44 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-print("ciao")
-train=open("file_dataset/train9rette.txt","r")
+train=open("file_dataset/13rettetrain.txt","r")
 y_train=[]
 x_train=[]
 Ntr=60000
 Nts=10000
 for i in range(Ntr):
     tmp=train.readline()
-    y_train.append(int(tmp[0]))
+    y_train.append(int(tmp[0:len(tmp)-1]))
     a=[]
-    for j in range(9):
+    for j in range(13):
         tmp=train.readline()
-        a.append(int(tmp[0]))
+        a.append(float(tmp[0:len(tmp)-1]))
     x_train.append(a)
 
 train.close()
-test=open("file_dataset/test9rette.txt","r")
+test=open("file_dataset/13rettetest.txt","r")
 y_test=[]
 x_test=[]
 for i in range(Nts):
     tmp=test.readline()
-    y_test.append(int(tmp[0]))
+    y_test.append(int(tmp[0:(len(tmp)-1)]))
     a=[]
-    for j in range(9):
-        
+    for j in range(13):
         tmp=test.readline()
-        a.append(int(tmp[0]))
+        a.append(float(tmp[0:len(tmp)-1]))
     x_test.append(a)
 
 x_train=np.array(x_train)
 y_train=np.array(y_train)
+
 x_test=np.array(x_test)
 y_test=np.array(y_test)
 
+print(x_train[0])
+print(y_train[0])
+
+
+wait = input("Press Enter to continue.")
 num_categories=10
 
 y_train=keras.utils.to_categorical(y_train,num_categories)
@@ -48,10 +52,11 @@ y_test =keras.utils.to_categorical(y_test, num_categories)
 model=Sequential()
 
 #aggiungo layer + input
-model.add(Dense(units=100,activation='relu',input_shape=(9,)))
+model.add(Dense(units=50,activation='relu',input_shape=(13
+,)))
 
 #aggiungo uno strato nascosto
-model.add(Dense(units=100,activation='relu'))
+model.add(Dense(units=50,activation='relu'))
 
 #output layer
 model.add(Dense(units=10,activation='softmax'))

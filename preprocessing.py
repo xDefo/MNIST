@@ -43,6 +43,7 @@ def genRette(xg,yg,nr):
 def findIntersection(img,m,dx,dy,xg,yg): #riscrivere in quanto il riferimento è sbagliato, non puoi usare x e y dei for come coordinate
     #xs=[]
     #ys=[]
+    distanza=float("inf")
     conteggio=0
     for i in range(dy):
         for x in range(dx):
@@ -52,24 +53,24 @@ def findIntersection(img,m,dx,dy,xg,yg): #riscrivere in quanto il riferimento è
                     #check sotto
                     xr=((y-0.5)-yg)/m+xg #fisso y del centro del lato in basso del quadrato con (y-0.5) e calcolo la x della retta in quel punto
                     if (xr<(x+0.5)) and (xr>(x-0.5)): # se la x è compresa nel lato allora la retta interseca la casella
-                        #xs.append(x)
-                        #ys.append(i)
+                        tmp=math.sqrt((x-xg)**2+(y-yg)**2)
+                        if(tmp<distanza): distanza=tmp
                         conteggio+=1
 
                     elif m<0:
                         #check destra
                         yr=m*((x+0.5)-xg)+yg
                         if((yr<(y+0.5)))and(yr>(y-0.5)):
-                        # xs.append(x)
-                        # ys.append(i)
+                            tmp=math.sqrt((x-xg)**2+(y-yg)**2)
+                            if(tmp<distanza): distanza=tmp
                             conteggio+=1
 
                     elif m>0:
                         #check sinistra
                         yr=m*((x-0.5)-xg)+yg
                         if((yr<(y+0.5)))and(yr>(y-0.5)):
-                        # xs.append(x)
-                            #ys.append(i)
+                            tmp=math.sqrt((x-xg)**2+(y-yg)**2)
+                            if(tmp<distanza): distanza=tmp
                             conteggio+=1
 
                 else:
@@ -78,9 +79,11 @@ def findIntersection(img,m,dx,dy,xg,yg): #riscrivere in quanto il riferimento è
                     if((yr<(y+0.5)))and(yr>(y-0.5)):
                         #xs.append(x)
                     # ys.append(i)
+                        tmp=math.sqrt((x-xg)**2+(y-yg)**2)
+                        if(tmp<distanza): distanza=tmp
                         conteggio+=1
 
-    return conteggio #xs,#ys,conteggio
+    return conteggio,distanza #xs,#ys,conteggio
             
 def scacchiera(img):
     
@@ -105,18 +108,17 @@ def create_file(insieme_train,insieme_test,n,file_name):  #funziona ancora solo 
         m=genRette(xg,yg,n) #genero coefficienti angolari rette
         f.write("{n}\n".format(n=insieme_test[idx1]))
         for m in m:
-            conta=findIntersection(img,m,28,28,xg,yg)
-            f.write("{n}\n".format(n=conta))
+            conta,dist=findIntersection(img,m,28,28,xg,yg)
+            f.write("{n} {d}\n".format(n=conta,d=dist))
         idx1+=1
-    fclose(f)
+    f.close()
 
 
 
 trainx,trainy,testx,testy=load_database.load_mnist()
 
-create_file(trainx,trainy,13,"file_dataset/13rettetrain.txt")
-print("fine training")
-create_file(testx,testy,13,"file_dataset/13rettetest.txt")
+create_file(trainx,trainy,9,"file_dataset/9rettetrain.txt")
+create_file(testx,testy,9,"file_dataset/9rettetest.txt")
 
 
    
