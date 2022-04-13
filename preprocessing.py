@@ -41,8 +41,8 @@ def genRette(xg,yg,nr):
     return m
 
 def findIntersection(img,m,dx,dy,xg,yg): #riscrivere in quanto il riferimento è sbagliato, non puoi usare x e y dei for come coordinate
-    #xs=[]
-    #ys=[]
+    xs=[]
+    ys=[]
     distanza=float("inf")
     conteggio=0
     for i in range(dy):
@@ -55,6 +55,8 @@ def findIntersection(img,m,dx,dy,xg,yg): #riscrivere in quanto il riferimento è
                     if (xr<(x+0.5)) and (xr>(x-0.5)): # se la x è compresa nel lato allora la retta interseca la casella
                         tmp=math.sqrt((x-xg)**2+(y-yg)**2)
                         if(tmp<distanza): distanza=tmp
+                        xs.append(x)
+                        ys.append(i)
                         conteggio+=1
 
                     elif m<0:
@@ -63,6 +65,8 @@ def findIntersection(img,m,dx,dy,xg,yg): #riscrivere in quanto il riferimento è
                         if((yr<(y+0.5)))and(yr>(y-0.5)):
                             tmp=math.sqrt((x-xg)**2+(y-yg)**2)
                             if(tmp<distanza): distanza=tmp
+                            xs.append(x)
+                            ys.append(i)
                             conteggio+=1
 
                     elif m>0:
@@ -71,19 +75,21 @@ def findIntersection(img,m,dx,dy,xg,yg): #riscrivere in quanto il riferimento è
                         if((yr<(y+0.5)))and(yr>(y-0.5)):
                             tmp=math.sqrt((x-xg)**2+(y-yg)**2)
                             if(tmp<distanza): distanza=tmp
+                            xs.append(x)
+                            ys.append(i)
                             conteggio+=1
 
                 else:
                     #m=0 cerco solo a sinistra
                     yr=m*((x-0.5)-xg)+yg
                     if((yr<(y+0.5)))and(yr>(y-0.5)):
-                        #xs.append(x)
-                    # ys.append(i)
+                        xs.append(x)
+                        ys.append(i)
                         tmp=math.sqrt((x-xg)**2+(y-yg)**2)
                         if(tmp<distanza): distanza=tmp
                         conteggio+=1
 
-    return conteggio,distanza #xs,#ys,conteggio
+    return conteggio,distanza ,xs,ys
             
 def scacchiera(img):
     
@@ -102,13 +108,17 @@ def create_file(insieme_train,insieme_test,n,file_name):  #funziona ancora solo 
     idx1=0
     x=np.arange(-0.5,28.5,0.1)
     for img in insieme_train:
+        print("immagine",idx1+1)
         img=normalizza(img,28,28,1) #normalizzo immagine
         img=skeletonize(img) #trovo lo skeletro
         xg,yg=baricentro(img,28,28) #calcolo il baricentro
         m=genRette(xg,yg,n) #genero coefficienti angolari rette
+        plt.imshow(img)
         f.write("{n}\n".format(n=insieme_test[idx1]))
         for m in m:
-            conta,dist=findIntersection(img,m,28,28,xg,yg)
+            conta,dist,xs,ys=findIntersection(img,m,28,28,xg,yg)
+            plt.scatter(xs,ys)
+            plt.plot(x,-m*(x-xg)+yg)
             f.write("{n} {d}\n".format(n=conta,d=dist))
         idx1+=1
     f.close()
@@ -117,8 +127,9 @@ def create_file(insieme_train,insieme_test,n,file_name):  #funziona ancora solo 
 
 trainx,trainy,testx,testy=load_database.load_mnist()
 
-create_file(trainx,trainy,9,"file_dataset/9rettetrain.txt")
-create_file(testx,testy,9,"file_dataset/9rettetest.txt")
+print("Creazione feature")
+create_file(trainx[0],trainy[0],9,"file_dataset/9rettetrain.txt")
+#create_file(testx[0],testy[0],9,"file_dataset/9rettetest.txt")
 
 
    
