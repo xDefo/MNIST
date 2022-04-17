@@ -106,7 +106,7 @@ def findIntersection(img,m,dx,dy,xg,yg): #riscrivere in quanto il riferimento è
                        # ys.append(i)
                         conteggio+=1
     return conteggio,distanza #,xs,ys
-
+""" 
 def findIntersectionwithpoint(img,m,dx,dy,xg,yg): #riscrivere in quanto il riferimento è sbagliato, non puoi usare x e y dei for come coordinate
     xs=[]
     ys=[]
@@ -115,55 +115,88 @@ def findIntersectionwithpoint(img,m,dx,dy,xg,yg): #riscrivere in quanto il rifer
     for i in range(dy):
         for x in range(dx):
             y=dy-i
-            if img[i,x]:
-                if ((m!=0) and (m!=float("inf"))):
-                    #check sotto
-                    xr=((y-0.5)-yg)/m+xg #fisso y del centro del lato in basso del quadrato con (y-0.5) e calcolo la x della retta in quel punto
-                    if ((xr<=(x+0.5)) and (xr>=(x-0.5))): # se la x è compresa nel lato allora la retta interseca la casella
-                        tmp=math.sqrt((x-xg)**2+(y-yg)**2)
-                        if(tmp<distanza): distanza=tmp
-                        xs.append(x)
-                        ys.append(i)
-                        conteggio+=1
+            if ((m!=0) and (m!=float("inf"))):
+                #check sotto
+                xr=((y-0.5)-yg)/m+xg #fisso y del centro del lato in basso del quadrato con (y-0.5) e calcolo la x della retta in quel punto
+                if ((xr<=(x+0.5)) and (xr>=(x-0.5))): # se la x è compresa nel lato allora la retta interseca la casella
+                    tmp=math.sqrt((x-xg)**2+(y-yg)**2)
+                    if(tmp<distanza): distanza=tmp
+                    xs.append(x)
+                    ys.append(i)
+                    conteggio+=1
 
-                    elif m<0:
-                        #check destra
-                        yr=m*((x+0.5)-xg)+yg
-                        if((yr<=(y+0.5))and(yr>=(y-0.5))):
-                            tmp=math.sqrt((x-xg)**2+(y-yg)**2)
-                            if(tmp<distanza): distanza=tmp
-                            xs.append(x)
-                            ys.append(i)
-                            conteggio+=1
-
-                    elif m>0:
-                        #check sinistra
-                        yr=m*((x-0.5)-xg)+yg
-                        if((yr<=(y+0.5))and(yr>=(y-0.5))):
-                            tmp=math.sqrt((x-xg)**2+(y-yg)**2)
-                            if(tmp<distanza): distanza=tmp
-                            xs.append(x)
-                            ys.append(i)
-                            conteggio+=1
-
-                elif (m==0):
-                    #m=0 cerco solo a sinistra
-                    yr=yg
+                elif m<0:
+                    #check destra
+                    yr=m*((x+0.5)-xg)+yg
                     if((yr<=(y+0.5))and(yr>=(y-0.5))):
-                        xs.append(x)
-                        ys.append(i)
-                        tmp=math.sqrt((x-xg)**2+(y-yg)**2)
-                        if(tmp<distanza): distanza=tmp
-                        conteggio+=1
-                elif (m==float("inf")):
-                    xr=xg #fisso y del centro del lato in basso del quadrato con (y-0.5) e calcolo la x della retta in quel punto
-                    if ((xr<=(x+0.5)) and (xr>=(x-0.5))): # se la x è compresa nel lato allora la retta interseca la casella
                         tmp=math.sqrt((x-xg)**2+(y-yg)**2)
                         if(tmp<distanza): distanza=tmp
                         xs.append(x)
                         ys.append(i)
                         conteggio+=1
+
+                elif m>0:
+                    #check sinistra
+                    yr=m*((x-0.5)-xg)+yg
+                    if((yr<=(y+0.5))and(yr>=(y-0.5))):
+                        tmp=math.sqrt((x-xg)**2+(y-yg)**2)
+                        if(tmp<distanza): distanza=tmp
+                        xs.append(x)
+                        ys.append(i)
+                        conteggio+=1
+
+            elif (m==0):
+                #m=0 cerco solo a sinistra
+                yr=yg
+                if((yr<=(y+0.5))and(yr>=(y-0.5))):
+                    xs.append(x)
+                    ys.append(i)
+                    tmp=math.sqrt((x-xg)**2+(y-yg)**2)
+                    if(tmp<distanza): distanza=tmp
+                    conteggio+=1
+            elif (m==float("inf")):
+                xr=xg #fisso y del centro del lato in basso del quadrato con (y-0.5) e calcolo la x della retta in quel punto
+                if ((xr<=(x+0.5)) and (xr>=(x-0.5))): # se la x è compresa nel lato allora la retta interseca la casella
+                    tmp=math.sqrt((x-xg)**2+(y-yg)**2)
+                    if(tmp<distanza): distanza=tmp
+                    xs.append(x)
+                    ys.append(i)
+                    conteggio+=1
     return conteggio,distanza ,xs,ys      
+"""
+def findIntersectionwithpoint(img,m,dx,dy,xg,yg): #riscrivere in quanto il riferimento è sbagliato, non puoi usare x e y dei for come coordinate
+    xs=[]
+    ys=[]
+    distanza=float("inf")
+    conteggio=0
+    a=m
+    b=-1
+    c=-m*xg+yg
+    for i in range(dy):
+        for x in range(dx):
+            y=dy-i
+            if ((m!=0) and (m!=float("inf"))):
+                d=abs(a*x+b*y+c)/math.sqrt(a**2+b**2)
+                if ((d>=0)and(d<=math.sqrt(2)/2)):
+                    xs.append(x)
+                    ys.append(i)
+            elif (m==0):
+                #m=0 cerco solo a sinistra
+                yr=yg
+                if((yr<=(y+0.5))and(yr>=(y-0.5))):
+                   
+                    tmp=math.sqrt((x-xg)**2+(y-yg)**2)
+                    if(tmp<distanza): distanza=tmp
+                    conteggio+=1
+            elif (m==float("inf")):
+                xr=xg #fisso y del centro del lato in basso del quadrato con (y-0.5) e calcolo la x della retta in quel punto
+                if ((xr<=(x+0.5)) and (xr>=(x-0.5))): # se la x è compresa nel lato allora la retta interseca la casella
+                    tmp=math.sqrt((x-xg)**2+(y-yg)**2)
+                    if(tmp<distanza): distanza=tmp
+                    xs.append(x)
+                    ys.append(i)
+                    conteggio+=1
+    return conteggio,distanza ,xs,ys     
 
 def scacchiera(img):
     
@@ -204,13 +237,13 @@ def prova(immagini_prova):
     ax.set_xlim(-0.5,27.5)
     x=np.arange(0,28,0.1)
 
-    img=immagini_prova[1]
+    img=immagini_prova[0]
     img=normalizza(img,28,28,1)
     xg,yg=baricentro(img,28,28)
     ax.imshow(img)
-    m=genRette(xg,yg,7)
+    m=genRette(xg,yg,9)
     print(m)
-    for m in m:
+    for m in m[2:3]:
         if m!=float("inf"):
             ax.plot(x,retta(x,-m,xg,yg),label="{:.2f}".format(-m))
         else:
@@ -223,6 +256,7 @@ def prova(immagini_prova):
 def main():
     trainx,trainy,testx,testy=load_database.load_mnist()
     
+    prova(trainx)
     print("Creazione feature train")
     #create_file(trainx,trainy,7,"file_dataset/7rettetrain.txt")
     print("Creazione feature test")

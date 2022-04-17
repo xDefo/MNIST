@@ -4,6 +4,7 @@ from tkinter import Y
 from turtle import color
 from cycler import cycler
 from cv2 import ellipse
+from  tensorflow.keras.models import Sequential
 from keras.models import Model   
 from keras.layers import * 
 from scipy.stats import norm
@@ -12,13 +13,14 @@ import numpy as np
 from matplotlib.patches import Ellipse
 from    keras.models import load_model
 import  tensorflow.keras as keras
+from sklearn.metrics import ConfusionMatrixDisplay, confusion_matrix
 
-train=open("file_dataset/7rettetrain1.txt","r")
+train=open("9rette.txt","r")
 y_train=[]
 x_train=[]
 Ntr=60000
 Nts=10000
-n=7
+n=9
 
 for i in range(Ntr):
     tmp=train.readline()
@@ -27,15 +29,10 @@ for i in range(Ntr):
     for j in range(n):
         tmp=train.readline()
         a.append(float(tmp[0:len(tmp)-1]))
-        tmp=train.readline()
-        if tmp!='inf':
-            a.append(float(tmp[0:len(tmp)-1]))
-        else:
-            a.append(-1)
     x_train.append(a)
 train.close()
 
-test=open("file_dataset/7rettetest1.txt","r")
+test=open("9rettetest.txt","r")
 y_test=[]
 x_test=[]
 for i in range(Nts):
@@ -45,11 +42,6 @@ for i in range(Nts):
     for j in range(n):
         tmp=test.readline()
         a.append(float(tmp[0:len(tmp)-1]))
-        tmp=test.readline()
-        if tmp!='inf':
-            a.append(float(tmp[0:len(tmp)-1]))
-        else:
-            a.append(-1)
     x_test.append(a)
 test.close()
 
@@ -58,6 +50,9 @@ y_train=np.array(y_train)
 
 x_test=np.array(x_test)
 y_test=np.array(y_test)
+
+print(y_test[0])
+print(x_test[0])
 """
 idx=np.where(y_train==2)
 num=x_train[idx]
@@ -109,20 +104,25 @@ for j in range(10):
 num_categories=10 
 
 y_train=keras.utils.to_categorical(y_train,num_categories)
-#y_test =keras.utils.to_categorical(y_test, num_categories)
+y_test =keras.utils.to_categorical(y_test, num_categories)
 
-"""
-inputs=Input(shape=(2*n,))
-hidde1=Dense(units=50,activation='relu')(inputs)
-hidden2=Dense(units=50,activation='relu')(hidde1)
-outputs=Dense(units=10,activation='softmax')(hidden2)
-model = Model(inputs, outputs)
+#creo il modello
+model=Sequential()
+
+#aggiungo layer + input
+model.add(Dense(units=100,activation='relu',input_shape=(9,)))
+
+#aggiungo uno strato nascosto
+model.add(Dense(units=50,activation='relu'))
+
+#output layer
+model.add(Dense(units=10,activation='softmax'))
 
 model.summary()
 
 model.compile(loss='categorical_crossentropy', metrics=['accuracy'])
 
-history=model.fit(x_train,y_train,epochs=20,verbose=1,validation_data=(x_test,y_test))
+history=model.fit(x_train,y_train,epochs=10,verbose=1,validation_data=(x_test,y_test))
 print(history.history.keys())
 
 # Summarize history for accuracy
@@ -144,9 +144,15 @@ plt.legend(['train', 'test'], loc='upper left')
 plt.show()
 
 # Salvataggio del modello
-model.save('modelli/prova_con_7_rette_e_dist.h5')
+model.save('modelli/prova_con_9_rettec++.h5')
 plt.show()
 
+predictions =model.predict(x_test)
+print(predictions)
+matrix = confusion_matrix(y_test.argmax(axis=1), predictions.argmax(axis=1))
+disp = ConfusionMatrixDisplay(matrix)
+disp.plot()
+plt.show()
 """
 f=open("sbagliati.txt","w")
 model=load_model("modelli/prova_con_7_rette_e_dist.h5")
@@ -161,3 +167,4 @@ for pat in x_test:
         count+=1
     idx+=1
 print(count)
+"""
